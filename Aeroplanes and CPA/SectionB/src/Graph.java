@@ -21,7 +21,8 @@ public class Graph implements GraphInterface{
 	//post: It sets the degree of each node to be equal to the number of incoming 
 	//      edges of that node. 
 	private void setIncomingDegreeRecursively(GraphNode node) {
-		
+		node.setDegree(node.getIncomingEdges().size());
+		node.getOutgoingEdges().forEach(edge -> setIncomingDegreeRecursively(edge.getEndPoint()));
 	}
 
 	//YOU ARE ASKED TO IMPLEMENT THIS METHOD
@@ -32,7 +33,26 @@ public class Graph implements GraphInterface{
 	//      another node indicates that there is a path from the former node to the latter 
 	//      node in the event-node graph.   
 	private QueueInterface<GraphNode> topologicalSort( ) {
-		
+		final Queue<GraphNode>
+				result = new Queue<>(),
+				temporary = new Queue<>(){{enqueue(start);}};
+
+		GraphNode current;
+
+		while(!temporary.isEmpty()){
+			current = temporary.dequeue();
+			result.enqueue(current);
+			current.getOutgoingEdges().forEach(edge ->
+			{
+				GraphNode node = edge.getEndPoint();
+				node.setDegree(node.getDegree() - 1);
+				if (node.getDegree() == 0){
+					temporary.enqueue(node);
+				}
+			});
+		}
+
+		return result;
 	}
 	
 	
@@ -49,14 +69,19 @@ public class Graph implements GraphInterface{
 		QueueInterface<GraphNode> sortedNodes = topologicalSort();
 		GraphNode start = sortedNodes.dequeue();
 		start.setEarliestCompletionTime(0);
-		
+
+		GraphNode currentNode;
+		int earliestTime = 0;
+
 		//YOU ARE ASKED TO IMPLEMENT THIS WHILE LOOP 
 		while (!sortedNodes.isEmpty()) {
-		
-		
-		
+			earliestTime = 0;
+			currentNode = sortedNodes.dequeue();
+			for (GraphEdge edge : currentNode.getIncomingEdges()){
+				earliestTime = Math.max(edge.getTaskDuration() + edge.getStartPoint().EarliestCompletionTime(), earliestTime);
+			}
+			currentNode.setEarliestCompletionTime(earliestTime);
 		}
-	
 	}
 	
 	public int getEarliestCompletionTime() {
