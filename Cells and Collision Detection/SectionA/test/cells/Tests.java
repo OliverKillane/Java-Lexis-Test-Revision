@@ -160,7 +160,6 @@ public class Tests {
       boundedBackup.revertToPrevious();
     }
 
-    System.out.println(boundedBackup.get());
 
     assertEquals(new Integer(5), boundedBackup.get());
     assertTrue(!boundedBackup.hasBackup());
@@ -186,7 +185,7 @@ public class Tests {
   }
 
 
-  /*
+
   @Test
   public void testQuestion4() {
 
@@ -233,7 +232,7 @@ public class Tests {
     assertTrue(comparator.compare(s2, s1) < 0);
 
   }
-  */
+
 
   private static void reportExceptionShouldHaveBeenThrown() {
     throw new RuntimeException("UnsupportedOperationException should have been thrown");
