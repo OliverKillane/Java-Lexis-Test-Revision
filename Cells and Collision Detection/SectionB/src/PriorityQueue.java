@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.function.BiFunction;
 
 /**
  * You must implement the <code>remove</code> and <code>PQRebuild</code> methods.
@@ -47,7 +48,7 @@ public class PriorityQueue<T extends Comparable<T>> implements
    * Adds a new entry to the priority queue according to the priority value.
    *
    * @param newEntry the new element to add to the priority queue
-   * @throws an exception if the priority queue is full
+   * throws an exception if the priority queue is full
    */
   public void add(T newEntry) throws PQException {
     if (size < max_size) {
@@ -73,14 +74,42 @@ public class PriorityQueue<T extends Comparable<T>> implements
    * Removes the element with highest priority.
    */
   public void remove() {
-    // TODO: Implement this method for Question 1
+    items[0] = items[size];
+    size--;
+    PQRebuild(0);
   }
 
   /**
    * <p> Implement this method for Question 1 </p>
    */
   private void PQRebuild(int root) {
-    // TODO: Implement this method for Question 1
+    int right, left, smallerSubHeap;
+    right = (left = 2 * root) + 1;
+
+    if (left < size){
+
+      //root is not a leaf.
+      if (left == size - 1){
+        smallerSubHeap = left;
+      } else if (items[left].compareTo(items[right]) < 0){
+        // left subtree has largest node
+        smallerSubHeap = left;
+      } else {
+        // right subtree has largest node
+        smallerSubHeap = right;
+      }
+
+      if (items[smallerSubHeap].compareTo(items[root]) < 0){
+
+        // swap over the parents
+        T holder = items[root];
+        items[root] = items[smallerSubHeap];
+        items[smallerSubHeap] = holder;
+
+        // rebuild the trees
+        PQRebuild(smallerSubHeap);
+      }
+    }
   }
 
 

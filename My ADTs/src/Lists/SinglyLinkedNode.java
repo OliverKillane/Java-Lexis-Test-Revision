@@ -4,11 +4,11 @@ public class SinglyLinkedNode<T> {
   private final T data;
   private SinglyLinkedNode<T> nextNode;
 
-  public SinglyLinkedNode(T data){
+  public SinglyLinkedNode(T data) {
     this.data = data;
   }
 
-  public SinglyLinkedNode(T data, SinglyLinkedNode<T> nextNode){
+  public SinglyLinkedNode(T data, SinglyLinkedNode<T> nextNode) {
     this(data);
     setNextNode(nextNode);
   }

@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.rmi.registry.Registry;
 import java.util.Scanner;
 
 /**
@@ -43,7 +44,21 @@ public class CollisionDetection {
    */
   private static boolean checkObjects(
       PriorityQueueInterface<Object2D> sortedPoints, AABB region) {
-    // TODO: Implement this method for Question 4
+    QuadTree tree = new QuadTree(region, 4);
+
+    while(!sortedPoints.isEmpty()){
+      Object2D elem = sortedPoints.peek();
+      sortedPoints.remove();
+
+      //create safety region
+      Point2D topLeft = new Point2D(elem.getCenter().x + elem.getSize(), elem.getCenter().y + elem.getSize());
+      Point2D bottomRight = new Point2D(elem.getCenter().x - elem.getSize(), elem.getCenter().y - elem.getSize());
+      if (tree.queryRegion(new AABB(topLeft, bottomRight)).size() != 0){
+        return false;
+      } else {
+        tree.add(elem);
+      }
+    }
     return true;
   }
 

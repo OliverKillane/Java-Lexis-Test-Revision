@@ -33,7 +33,7 @@ public class QuadTree implements QuadTreeInterface {
    * @param elem the 2D-object to add to the tree.
    */
   public void add(Object2D elem) {
-    // TODO: Implement this method for Question 2
+    addHelper(root, elem);
   }
 
   /**
@@ -43,8 +43,36 @@ public class QuadTree implements QuadTreeInterface {
    * @param node the root of the current subtree to visit
    */
   private QuadTreeNode addHelper(QuadTreeNode node, Object2D elem) {
-    // TODO: Implement this method for Question 2
-    return null;
+    if (node.isLeaf()){
+      if (node.values.size() < nodeCapacity){
+
+        // if under capacity, can add to the end of the array
+        node.values.add(node.values.size(), elem);
+      } else {
+
+        // subdivide node
+        node.subdivide();
+
+        // add all its existing elements to the node, removing from values as they go.
+        for (int i = node.values.size() - 1; i >= 0; i--){
+          addHelper(node, node.values.get(i));
+          node.values.remove(i);
+        }
+
+        addHelper(node, elem);
+      }
+
+    } else {
+      if (isIn(node.NE, elem)) {addHelper(node.NE, elem);}
+      else if (isIn(node.NW, elem)) {addHelper(node.NW, elem);}
+      else if (isIn(node.SE, elem)) {addHelper(node.SE, elem);}
+      else {addHelper(node.NW, elem);}
+    }
+   return null;
+  }
+
+  private boolean isIn(QuadTreeNode node,  Object2D elem){
+    return node.region.covers(elem.getCenter());
   }
 
   /**
@@ -57,8 +85,9 @@ public class QuadTree implements QuadTreeInterface {
    * @return a list of 2D-objects
    */
   public ListInterface<Object2D> queryRegion(AABB region) {
-    // TODO: Implement this method for Question 3
-    return null;
+    ListInterface<Object2D> bucket = new ListArrayBased<>();
+    queryRegionHelper(root, region, bucket);
+    return bucket;
   }
 
   /**
@@ -73,7 +102,23 @@ public class QuadTree implements QuadTreeInterface {
    */
   private void queryRegionHelper(QuadTreeNode node, AABB region,
       ListInterface<Object2D> bucket) {
-    // TODO: Implement this method for Question 3
+    if (node.isLeaf()){
+      for (int i = node.values.size() - 1; i >= 0; i--){
+        Object2D current = node.values.get(i);
+        if (region.covers(current.getCenter())){
+          bucket.add(1,current);
+        }
+      }
+    } else {
+      // if any part of the region is in the node, then traverse all. If not in a quad, the next recursion down will deal with it.
+      if (
+          node.region.covers(region.topRight()) || node.region.covers(region.topLeft()) || node.region.covers(region.bottomLeft()) || node.region.covers(region.bottomRight())){
+        queryRegionHelper(node.NE, region, bucket);
+        queryRegionHelper(node.NW, region, bucket);
+        queryRegionHelper(node.SE, region, bucket);
+        queryRegionHelper(node.SW, region, bucket);
+      }
+    }
   }
 
   /**
