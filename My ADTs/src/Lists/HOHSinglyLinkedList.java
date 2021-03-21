@@ -32,7 +32,7 @@ public class HOHSinglyLinkedList<T> implements List<T>{
 
   @Override
   public void add(T data) {
-    end.lock();
+
 
   }
 
