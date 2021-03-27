@@ -40,6 +40,8 @@ public class GameReport {
 
 		assert m6.isAlive() && m7.isAlive();
 
+		t1.applySpell(m7);
+
 		System.out.println(t1.toString());
 
 		// TODO: complete this method as part of Section A Question 5

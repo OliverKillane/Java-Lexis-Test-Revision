@@ -23,7 +23,7 @@ class Magician extends Entity implements SpellCaster{
 
   @Override
   public int getStrength() {
-    return lifePoints;
+    return lifePoints * 2;
   }
 }
 // TODO: complete this class as part of Section A Question 3

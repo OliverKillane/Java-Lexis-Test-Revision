@@ -1,6 +1,7 @@
 package noughtsandcrosses;
 
 import java.util.Iterator;
+import java.util.List;
 
 public class GenericList<T> implements GenericListInterface<T>{
 
@@ -43,7 +44,29 @@ public class GenericList<T> implements GenericListInterface<T>{
 	//post: Adds the given item at the given position in the list. It throughs an exception if the 
 	//      position is out of bound.
 	public void add(int pos, T item) throws ListIndexOutOfBoundsException{
-		
+		//validify position:
+		if (pos < 0 || pos > numItems){
+			throw new IllegalArgumentException();
+		} else {
+			ListNode<T> current = head.getNext();
+			ListNode<T> previous = head;
+
+			for (int index = 0; index < pos; index++){
+				previous = current;
+				current = current.getNext();
+			}
+
+			// prev -> node before position,
+			// curr -> node at pos
+
+			if (current == null){
+				previous.setNext(new ListNode<>(item));
+			} else {
+				ListNode<T> node = new ListNode<>(item);
+				previous.setNext(node);
+				node.setNext(current);
+			}
+		}
 	}// end add
 
 	//post: Removes the item at the given position in the list. It throughs an exceptions if the
@@ -75,7 +98,7 @@ public class GenericList<T> implements GenericListInterface<T>{
 	}	
      
     
-   	private class ListIterator implements Iterator<T> {
+   	public class ListIterator implements Iterator<T> {
 
 		private ListNode<T> current;
 		private ListNode<T> lastReturned;

@@ -1,6 +1,9 @@
 package noughtsandcrosses;
 
 import java.util.Iterator;
+import java.util.stream.Stream;
+import noughtsandcrosses.GenericList.ListIterator;
+
 
 public class GameTree implements GameTreeInterface {
 	
@@ -24,7 +27,14 @@ public class GameTree implements GameTreeInterface {
 	//YOU ARE ASKED TO IMPLEMENT THIS METHOD
 	//post: Returns the number of boards stored in a game tree, excluded the root.
 	private int sizeTree(GameTreeNode node){
-		
+		int size = 1;
+		ListIterator children = node.getChildren().iterator();
+
+		while(children.hasNext()){
+			size += sizeTree((GameTreeNode) children.next());
+		}
+
+		return size;
 	}	
 	
 	//post: Expands the game tree fully by adding all possible boards in the game.
@@ -38,7 +48,19 @@ public class GameTree implements GameTreeInterface {
 	//      all the possible moves that the computer and the user player
 	//      can make, until the game is finished, from the given node onwards.
 	private void expandTree(GameTreeNode node){
-	 	
+		Board current = node.getBoard();
+		if (!current.isFinished()){
+			char player = current.getTurn();
+			for (int pos = 0; pos < 9; pos++){
+				if (current.getMark(pos) == ' '){
+					Board newboard = current.makeCopy();
+					newboard.setMark(pos, player);
+					GameTreeNode newNode = new GameTreeNode(newboard);
+					node.getChildren().add(0, newNode);
+					expandTree(newNode);
+				}
+			}
+		}
 	}
 	
 	//pre:  The game tree is fully expanded.
