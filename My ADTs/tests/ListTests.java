@@ -1,5 +1,8 @@
-import Lists.List;
-import Lists.SinglyLinkedList;
+import java.util.Arrays;
+import java.util.stream.IntStream;
+import listImplementations.Hohsinglylinkedlist;
+import listImplementations.List;
+import listImplementations.SinglyLinkedList;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,5 +37,48 @@ public class ListTests {
 
     System.out.println(testList.toString());
 
+  }
+
+  @Test
+  public void anothertest(){
+    List<Character> testList = new Hohsinglylinkedlist<>();
+    testList.add('a');
+    System.out.println(testList.toString());
+    testList.insert('b', 1);
+    System.out.println(testList.toString());
+  }
+
+  @Test
+  public void stressTest(){
+    final int THREADS = 2;
+
+    List<Character> testlist = new Hohsinglylinkedlist<>();
+
+
+    Thread[] threads = new Thread[THREADS];
+
+
+    Arrays.setAll(threads, (a) ->  new Thread(() -> {
+      Character data = (char) (a + 65);
+
+      for (int i = 0; i < a; i++){
+        testlist.add(data);
+      }
+
+      for (int i = 0; i < a; i++){
+        testlist.remove(data);
+      }
+    }));
+
+    Arrays.stream(threads).forEach(Thread::start);
+    Arrays.stream(threads).forEach((a) -> {
+      try {
+        a.join();
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    });
+
+    Assert.assertTrue(testlist.isEmpty());
   }
 }

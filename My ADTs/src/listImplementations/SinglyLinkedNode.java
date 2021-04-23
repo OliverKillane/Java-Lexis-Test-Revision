@@ -1,4 +1,4 @@
-package Lists;
+package listImplementations;
 
 public class SinglyLinkedNode<T> {
   private final T data;

@@ -1,18 +1,18 @@
-package Lists;
+package listImplementations;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class HOHSinglyLinkedNode<T> {
+public class hohsinglylinkednode<T> {
   private final Lock lock = new ReentrantLock();
   private final T data;
-  private HOHSinglyLinkedNode<T> nextNode;
+  private hohsinglylinkednode<T> nextNode;
 
-  public HOHSinglyLinkedNode(T data) {
+  public hohsinglylinkednode(T data) {
     this.data = data;
   }
 
-  public HOHSinglyLinkedNode(T data, HOHSinglyLinkedNode<T> nextNode) {
+  public hohsinglylinkednode(T data, hohsinglylinkednode<T> nextNode) {
     this(data);
     this.nextNode = nextNode;
   }
@@ -21,11 +21,11 @@ public class HOHSinglyLinkedNode<T> {
     return data;
   }
 
-  public HOHSinglyLinkedNode<T> getNextNode() {
+  public hohsinglylinkednode<T> getNextNode() {
     return nextNode;
   }
 
-  public void setNextNode(HOHSinglyLinkedNode<T> nextNode) {
+  public void setNextNode(hohsinglylinkednode<T> nextNode) {
     this.nextNode = nextNode;
   }
 

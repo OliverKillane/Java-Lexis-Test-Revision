@@ -1,4 +1,4 @@
-package Lists;
+package listImplementations;
 
 public interface List<T> {
   void add(T data);
