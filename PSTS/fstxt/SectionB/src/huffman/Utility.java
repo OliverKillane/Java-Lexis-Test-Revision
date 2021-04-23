@@ -7,7 +7,10 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Utility {
@@ -43,7 +46,34 @@ public class Utility {
   }
 
   public static Map<String, Integer> countWords(List<String> words) {
+    int THREADS = 3;
+    int wordsPerThread = words.size() / (THREADS - 1);
+
+    ConcurrentMap<String, Integer> counts = new ConcurrentHashMap<>();
+
+    Thread[] threads = new Thread[THREADS];
+    Arrays.setAll(threads, (threadNo) -> new Thread(() -> {
+      for (int index = threadNo * wordsPerThread; index < Math.min((threadNo + 1) * wordsPerThread, words.size()); index++) {
+        //hard!
+
+        //want to both update and add new '1' if not present.
+        counts.putIfAbsent(words.get(index), 0);
+        counts.compute(words.get(index), (k,v) -> v+1);
+      }
+    }));
+
+    Arrays.stream(threads).forEach(Thread::start);
+    Arrays.stream(threads).forEach((a) -> {
+      try {
+        a.join();
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    });
+
+    return counts;
+
     //TODO replace the current sequenctial implementation with a concurrent one (Q4)
-    return words.stream().collect(Collectors.toMap(w -> w, w -> 1, Integer::sum));
+    // return words.stream().collect(Collectors.toMap(w -> w, w -> 1, Integer::sum));
   }
 }
