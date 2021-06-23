@@ -3,6 +3,7 @@ import java.util.stream.IntStream;
 import listImplementations.Hohsinglylinkedlist;
 import listImplementations.List;
 import listImplementations.SinglyLinkedList;
+import listImplementations.hohFineList;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -52,7 +53,7 @@ public class ListTests {
   public void stressTest(){
     final int THREADS = 2;
 
-    List<Character> testlist = new Hohsinglylinkedlist<>();
+    List<Character> testlist = new hohFineList<>();
 
 
     Thread[] threads = new Thread[THREADS];
@@ -61,12 +62,8 @@ public class ListTests {
     Arrays.setAll(threads, (a) ->  new Thread(() -> {
       Character data = (char) (a + 65);
 
-      for (int i = 0; i < a; i++){
+      for (int i = 0; i < 9; i++){
         testlist.add(data);
-      }
-
-      for (int i = 0; i < a; i++){
-        testlist.remove(data);
       }
     }));
 
@@ -79,6 +76,7 @@ public class ListTests {
       }
     });
 
-    Assert.assertTrue(testlist.isEmpty());
+    System.out.println(testlist.toString());
+    Assert.assertTrue(testlist.size() == THREADS * 9);
   }
 }

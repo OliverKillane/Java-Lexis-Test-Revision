@@ -30,16 +30,9 @@ public class Hohsinglylinkedlist<T> implements List<T> {
     current.lock();
 
     // hand over hand locking, continue until predicate satisfied or no more nodes.
-    for (int pos = 0; !predicate.apply(pos, current); pos++) {
+    for (int pos = 0; !predicate.apply(pos, current) && current != end; pos++) {
 
       prev.unlock();
-      // if we have reached the end without finding the correct node then throw an error
-      if (current == end) {
-        current.unlock();
-        throw new IllegalArgumentException("the predicate provided could not be satisified");
-
-      }
-
       prev = current;
       current = current.getNextNode();
       if (current == null) {
@@ -64,8 +57,6 @@ public class Hohsinglylinkedlist<T> implements List<T> {
 
     // the second node in the tuple must be the last node
     assert position.second == end;
-
-    assert end != null;
 
     // create new node to insert, with its next node ebing the end of the linkedlist
     hohsinglylinkednode<T> newnode = new hohsinglylinkednode<>(data, end);
